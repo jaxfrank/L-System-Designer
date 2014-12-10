@@ -1,6 +1,12 @@
 #include "MainWindow.h"
 #include "ui_MainWindow.h"
 
+#include <QString>
+#include <QDebug>
+
+#include "VariableSequence.h"
+#include "Variable.h"
+
 MainWindow::MainWindow(QWidget *parent) :
 	QMainWindow(parent),
 	ui(new Ui::MainWindow)
@@ -8,7 +14,6 @@ MainWindow::MainWindow(QWidget *parent) :
 	ui->setupUi(this);
 }
 
-MainWindow::~MainWindow()
-{
+MainWindow::~MainWindow() {
 	delete ui;
 }

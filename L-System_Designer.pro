@@ -13,8 +13,14 @@ TEMPLATE = app
 
 
 SOURCES += main.cpp\
-        MainWindow.cpp
+        MainWindow.cpp \
+    LSystem.cpp \
+    Variable.cpp \
+    VariableSequence.cpp
 
-HEADERS  += MainWindow.h
+HEADERS  += MainWindow.h \
+    LSystem.h \
+    Variable.h \
+    VariableSequence.h
 
 FORMS    += MainWindow.ui
