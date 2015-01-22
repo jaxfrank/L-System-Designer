@@ -16,11 +16,13 @@ SOURCES += main.cpp\
         MainWindow.cpp \
     LSystem.cpp \
     Variable.cpp \
-    VariableSequence.cpp
+    VariableSequence.cpp \
+    LSystemModel.cpp
 
 HEADERS  += MainWindow.h \
     LSystem.h \
     Variable.h \
-    VariableSequence.h
+    VariableSequence.h \
+    LSystemModel.h
 
 FORMS    += MainWindow.ui
