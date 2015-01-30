@@ -1,26 +1,39 @@
 #ifndef VARIABLE_SEQUENCE_H
 #define VARIABLE_SEQUENCE_H
 
-#include <vector>
+#include <QObject>
+#include <QList>
+#include <QString>
 
 class Variable;
 
-class VariableSequence {
+class VariableSequence : public QObject {
+	Q_OBJECT
 public:
-	VariableSequence();
+	VariableSequence(QString name = "Untitled", QObject* parent = nullptr);
 
 	bool operator==(const VariableSequence& rhs);
 	bool operator!=(const VariableSequence& rhs);
 
-	const Variable* const at(int i) const;
+	Variable* at(int i);
 
 	Variable*& operator[](size_t pos);
 	const Variable* const operator[](size_t pos) const;
 
-	void push_back(Variable* variable);
-	void push_back(const VariableSequence& sequence);
-	void pop_back();
+	bool contains(Variable* variable) const;
+
+	void pushFront(Variable* variable);
+	void pushFront(const VariableSequence& sequence);
+	void popFront();
+
+	void pushBack(Variable* variable);
+	void pushBack(const VariableSequence& sequence);
+	void popBack();
+
 	void insert(int pos, Variable* variable);
+	void set(int pos, Variable* variable);
+
+	void remove(int pos);
 	void clear();
 
 	const Variable* const front() const;
@@ -28,9 +41,14 @@ public:
 	const Variable* const back() const;
 	const Variable* back();
 
-	size_t length() const { return _variables.size(); }
+	size_t length() const { return _variables.count(); }
+
+	void setName(QString name);
+	QString getName();
+
 private:
-	std::vector<Variable*> _variables;
+	QString _name;
+	QList<Variable*> _variables;
 };
 
 #endif // VARIABLE_SEQUENCE_H

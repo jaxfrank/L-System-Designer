@@ -17,12 +17,26 @@ SOURCES += main.cpp\
     LSystem.cpp \
     Variable.cpp \
     VariableSequence.cpp \
-    LSystemModel.cpp
+    Production.cpp \
+    VariableSequenceModel.cpp \
+    DialogCreateVariable.cpp \
+    ProductionTableModel.cpp \
+    SpinBoxDelegate.cpp \
+    VariableSequenceListModel.cpp \
+    DialogCreateAxiom.cpp
 
 HEADERS  += MainWindow.h \
     LSystem.h \
     Variable.h \
     VariableSequence.h \
-    LSystemModel.h
+    Production.h \
+    VariableSequenceModel.h \
+    DialogCreateVariable.h \
+    ProductionTableModel.h \
+    SpinBoxDelegate.h \
+    VariableSequenceListModel.h \
+    DialogCreateAxiom.h
 
-FORMS    += MainWindow.ui
+FORMS    += MainWindow.ui \
+    DialogCreateVariable.ui \
+    DialogCreateAxiom.ui
