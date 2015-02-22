@@ -22,16 +22,21 @@ Variable::~Variable() {
 }
 
 Production* Variable::getRandomProduction(std::mt19937& generator) {
-	std::uniform_int_distribution<> distribution(0, _sumOfProductionWeights - 1);
+	recalculateProductionWeights();
+	if(_sumOfProductionWeights == 1) {
+		return *_productions->begin();
+	} else {
+		std::uniform_int_distribution<int> distribution(0, _sumOfProductionWeights - 1);
 
-	int rnd = distribution(generator);
-	for(int i = 0; i < _productions->size(); i++) {
-		if(rnd < _productions->at(i)->getWeight())
-			return _productions->at(i);
+		int rnd = distribution(generator);
+		for(int i = 0; i < _productions->size(); i++) {
+			if(rnd < _productions->at(i)->getWeight())
+				return _productions->at(i);
 
-		rnd -= _productions->at(i)->getWeight();
+			rnd -= _productions->at(i)->getWeight();
+		}
+		return *_productions->end();
 	}
-	return *_productions->end();
 }
 
 ProductionTableModel* Variable::getProductionModel() {
@@ -40,6 +45,13 @@ ProductionTableModel* Variable::getProductionModel() {
 
 int Variable::getNumProductions() const {
 	return _productions->count();
+}
+
+void Variable::recalculateProductionWeights() {
+	_sumOfProductionWeights = 0;
+	for(int i = 0; i < _productions->size(); i++) {
+		_sumOfProductionWeights += _productions->at(i)->getWeight();
+	}
 }
 
 void Variable::addProduction(VariableSequence* const& sequence, int weight, int pos) {

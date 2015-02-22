@@ -1,11 +1,13 @@
 #include "VariableSequence.h"
 
 #include "Variable.h"
+#include "VariableSequenceModel.h"
 
 VariableSequence::VariableSequence(QString name, QObject* parent):
 	QObject(parent),
 	_name(name),
-	_variables()
+	_variables(),
+	_model(nullptr)
 {}
 
 Variable* VariableSequence::at(int i) {
@@ -27,11 +29,11 @@ bool VariableSequence::operator!=(const VariableSequence& rhs) {
 }
 
 Variable*& VariableSequence::operator[](size_t pos) {
-	return _variables[pos];
+	return _variables[(int)pos];
 }
 
 const Variable* const VariableSequence::operator[](size_t pos) const {
-	return _variables[pos];
+	return _variables[(int)pos];
 }
 
 bool VariableSequence::contains(Variable* variable) const {
@@ -42,9 +44,11 @@ void VariableSequence::pushFront(Variable* variable) {
 	_variables.push_front(variable);
 }
 
-void VariableSequence::pushFront(const VariableSequence& sequence) {
-	for(int i = sequence.length() - 1; i >= 0; i--) {
-		_variables.push_front(sequence._variables.at(i));
+void VariableSequence::pushFront(const VariableSequence* sequence) {
+	if(!sequence) return;
+
+	for(int i = (int)sequence->length() - 1; i >= 0; i--) {
+		_variables.push_front(sequence->_variables.at(i));
 	}
 }
 
@@ -58,8 +62,10 @@ void VariableSequence::pushBack(Variable* variable) {
 	_variables.push_back(variable);
 }
 
-void VariableSequence::pushBack(const VariableSequence& sequence) {
-	_variables << sequence._variables;
+void VariableSequence::pushBack(const VariableSequence* sequence) {
+	if(!sequence) return;
+
+	_variables << sequence->_variables;
 }
 
 void VariableSequence::popBack() {
@@ -111,4 +117,11 @@ void VariableSequence::setName(QString name) {
 
 QString VariableSequence::getName() {
 	return _name;
+}
+
+VariableSequenceModel*VariableSequence::getModel() {
+	if(!_model) {
+		_model = new VariableSequenceModel(this);
+	}
+	return _model;
 }

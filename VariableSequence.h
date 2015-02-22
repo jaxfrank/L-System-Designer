@@ -6,6 +6,7 @@
 #include <QString>
 
 class Variable;
+class VariableSequenceModel;
 
 class VariableSequence : public QObject {
 	Q_OBJECT
@@ -23,11 +24,11 @@ public:
 	bool contains(Variable* variable) const;
 
 	void pushFront(Variable* variable);
-	void pushFront(const VariableSequence& sequence);
+	void pushFront(const VariableSequence* sequence);
 	void popFront();
 
 	void pushBack(Variable* variable);
-	void pushBack(const VariableSequence& sequence);
+	void pushBack(const VariableSequence* sequence);
 	void popBack();
 
 	void insert(int pos, Variable* variable);
@@ -46,9 +47,12 @@ public:
 	void setName(QString name);
 	QString getName();
 
+	VariableSequenceModel* getModel();
+
 private:
 	QString _name;
 	QList<Variable*> _variables;
+	VariableSequenceModel* _model;
 };
 
 #endif // VARIABLE_SEQUENCE_H

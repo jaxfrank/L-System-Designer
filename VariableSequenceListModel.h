@@ -13,9 +13,14 @@ public:
 
 	int rowCount(const QModelIndex& parent) const;
 	QVariant data(const QModelIndex& index, int role) const;
+	bool setData(const QModelIndex& index, const QVariant& value, int role);
+
+	bool insertRows(int row, int count, const QModelIndex& parent);
+	bool removeRows(int row, int count, const QModelIndex& parent);
 
 private:
-	QList<VariableSequence*>* _variableSequenes;
+	QList<VariableSequence*>* _variableSequences;
+
 };
 
 #endif // VARIABLE_SEQUENCE_LIST_MODEL_H

@@ -2,16 +2,19 @@
 <ui version="4.0">
  <class>DialogCreateAxiom</class>
  <widget class="QDialog" name="DialogCreateAxiom">
+  <property name="windowModality">
+   <enum>Qt::WindowModal</enum>
+  </property>
   <property name="geometry">
    <rect>
     <x>0</x>
     <y>0</y>
     <width>565</width>
-    <height>432</height>
+    <height>326</height>
    </rect>
   </property>
   <property name="windowTitle">
-   <string>Dialog</string>
+   <string>Axiom</string>
   </property>
   <layout class="QVBoxLayout" name="verticalLayout_4">
    <item>
@@ -132,7 +135,7 @@
      <item>
       <widget class="QLabel" name="lblErrorMessage">
        <property name="text">
-        <string> </string>
+        <string/>
        </property>
       </widget>
      </item>

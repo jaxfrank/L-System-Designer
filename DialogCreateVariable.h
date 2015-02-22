@@ -59,6 +59,7 @@ private:
 	VariableSequenceModel* _variableModel;
 	SpinBoxDelegate* _itemDelegate;
 
+	VariableSequenceModel* _currentProductionModel;
 	QModelIndex _currentProductionIndex;
 
 	Mode _currentMode;

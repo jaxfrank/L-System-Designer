@@ -14,7 +14,7 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>Create Variable</string>
+   <string>Variable</string>
   </property>
   <layout class="QVBoxLayout" name="verticalLayout_5">
    <item>

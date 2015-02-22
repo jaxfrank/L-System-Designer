@@ -3,16 +3,21 @@
 #include "VariableSequence.h"
 #include "Variable.h"
 #include "VariableSequenceModel.h"
+#include "VariableSequenceListModel.h"
+
+#include <QDebug>
 
 LSystem::LSystem(QObject* parent):
 	QObject(parent),
 	_variableModel(new VariableSequenceModel(new VariableSequence("Variables", this), this)),
-	_variableLookup(new QHash<QString, Variable*>())
+	_variableLookup(new QHash<QString, Variable*>()),
+	_axioms(new VariableSequenceListModel(new QList<VariableSequence*>(), this)),
+	_axiomNames()
 {}
 
 LSystem::~LSystem() {
-	foreach(VariableSequence* sequence, _axioms) {
-		delete sequence;
+	for(int i = 0; i < _axioms->rowCount(QModelIndex()); i++) {
+		delete (VariableSequence*)_axioms->data(_axioms->index(i), Qt::EditRole).value<void*>();
 	}
 	delete _variableModel;
 	foreach(Variable* variable, *_variableLookup) {
@@ -25,14 +30,14 @@ int LSystem::getNumVariables() const {
 }
 
 int LSystem::getNumAxioms() const {
-	return _axioms.size();
+	return _axioms->rowCount(QModelIndex());
 }
 
 void LSystem::addVariable(Variable* variable) {
 	_variableLookup->insert(variable->getName(), variable);
 
 	_variableModel->insertRow(0, QModelIndex());
-	_variableModel->setData(_variableModel->index(0, 0), QVariant::fromValue((void*)variable), Qt::DisplayRole);
+	_variableModel->setData(_variableModel->index(0, 0), QVariant::fromValue<void*>((void*)variable), Qt::EditRole);
 }
 
 Variable* LSystem::getVariable(QString& name) {
@@ -68,10 +73,29 @@ VariableSequenceModel*LSystem::getVariableModel() {
 }
 
 VariableSequence* LSystem::getAxiom(int index) {
-	if(index < 0 || index >= _axioms.size()) return nullptr;
-	return _axioms[index];
+	if(index < 0 || index >= _axioms->rowCount(QModelIndex())) return nullptr;
+	return (VariableSequence*)_axioms->data(_axioms->index(index, 0), Qt::EditRole).value<void*>();
 }
 
-QList<VariableSequence*>* LSystem::getAxioms() {
-	return &_axioms;
+void LSystem::addAxiom(VariableSequence* axiom) {
+	_axiomNames.insert(axiom->getName());
+
+	_axioms->insertRows(0, 1, QModelIndex());
+	_axioms->setData(_axioms->index(0, 0), QVariant::fromValue<void*>((void*)axiom), Qt::EditRole);
+}
+
+bool LSystem::axiomExists(const QString& name) const {
+	return _axiomNames.contains(name);
+}
+
+void LSystem::changeAxiomName(const QString& originalName, const QString& newName) {
+	auto iter = _axiomNames.find(originalName);
+	if(iter != _axiomNames.end()) {
+		_axiomNames.remove(originalName);
+		_axiomNames.insert(newName);
+	}
+}
+
+VariableSequenceListModel* LSystem::getAxiomModel() {
+	return _axioms;
 }

@@ -39,6 +39,8 @@ private:
 	QList<Production*>* _productions;
 	int _sumOfProductionWeights;
 	ProductionTableModel* _productionModel;
+
+	void recalculateProductionWeights();
 };
 
 #endif // VARIABLE_H

@@ -20,23 +20,41 @@ int VariableSequenceModel::rowCount(const QModelIndex& parent) const {
 }
 
 QVariant VariableSequenceModel::data(const QModelIndex& index, int role) const {
-	if(!index.isValid()) return QVariant();
+	if(!index.isValid()) {
+		if(role == Qt::DisplayRole) {
+			return _sequence->getName();
+		} else if(role == Qt::UserRole){
+			return QVariant::fromValue<void*>((void*)_sequence);
+		} else {
+			return QVariant();
+		}
+	}
+
 	switch(role) {
 	case Qt::DisplayRole:
 		return _sequence->at(index.row())->getName();
-	case Qt::UserRole:
 	case Qt::EditRole:
-		return QVariant::fromValue((void*)_sequence->at(index.row()));
+		return QVariant::fromValue<void*>((void*)_sequence->at(index.row()));
+	case Qt::UserRole:
+		return QVariant::fromValue<void*>((void*)_sequence);
 	default:
 		return QVariant();
 	}
 }
 
 bool VariableSequenceModel::setData(const QModelIndex& index, const QVariant& value, int role) {
-	if(index.row() < 0 || index.row() >= _sequence->length()) return false;
-	Variable* var = (Variable*)value.value<void*>();
-	_sequence->set(index.row(), var);
-
+	Variable* var;
+	switch(role) {
+	case Qt::EditRole:
+	case Qt::UserRole:
+		if(index.row() < 0 || index.row() >= _sequence->length()) return false;
+		var = (Variable*)value.value<void*>();
+		_sequence->set(index.row(), var);
+		break;
+	case Qt::DisplayRole:
+		_sequence->setName(value.value<QString>());
+		break;
+	}
 	QVector<int> roles;
 	roles << role;
 	emit dataChanged(index, index, roles);
@@ -46,7 +64,7 @@ bool VariableSequenceModel::setData(const QModelIndex& index, const QVariant& va
 bool VariableSequenceModel::insertRows(int row, int count, const QModelIndex& parent) {
 	if(count <= 0) return true;
 	beginInsertRows(parent, row, row + count - 1);
-	while(count--) _sequence->insert(row, NULL);
+	while(count--) _sequence->insert(row, nullptr);
 	endInsertRows();
 	return true;
 }

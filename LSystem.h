@@ -5,10 +5,12 @@
 #include <QAbstractItemModel>
 #include <QList>
 #include <QHash>
+#include <QSet>
 
 class Variable;
 class VariableSequence;
 class VariableSequenceModel;
+class VariableSequenceListModel;
 
 class LSystem : public QObject {
 	Q_OBJECT
@@ -27,14 +29,19 @@ public:
 
 	VariableSequenceModel* getVariableModel();
 
+	VariableSequenceListModel* getAxiomModel();
 	VariableSequence* getAxiom(int index);
-	QList<VariableSequence*>* getAxioms();
+	void addAxiom(VariableSequence* axiom);
+
+	bool axiomExists(const QString& name) const;
+	void changeAxiomName(const QString& originalName, const QString& newName);
 
 private:
 	VariableSequenceModel* _variableModel;
-	QList<VariableSequence*> _axioms;
-
 	QHash<QString, Variable*>* _variableLookup;
+
+	VariableSequenceListModel* _axioms;
+	QSet<QString> _axiomNames;
 };
 
 #endif // L_SYSTEM_H

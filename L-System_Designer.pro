@@ -23,7 +23,8 @@ SOURCES += main.cpp\
     ProductionTableModel.cpp \
     SpinBoxDelegate.cpp \
     VariableSequenceListModel.cpp \
-    DialogCreateAxiom.cpp
+    DialogCreateAxiom.cpp \
+    Simulator.cpp
 
 HEADERS  += MainWindow.h \
     LSystem.h \
@@ -35,8 +36,17 @@ HEADERS  += MainWindow.h \
     ProductionTableModel.h \
     SpinBoxDelegate.h \
     VariableSequenceListModel.h \
-    DialogCreateAxiom.h
+    DialogCreateAxiom.h \
+    Simulator.h
 
 FORMS    += MainWindow.ui \
     DialogCreateVariable.ui \
     DialogCreateAxiom.ui
+
+unix|win32: LIBS += -L$$PWD/../../c++/Lua/ -llua52
+
+INCLUDEPATH += $$PWD/../../c++/Lua/include
+DEPENDPATH += $$PWD/../../c++/Lua/include
+
+win32:!win32-g++: PRE_TARGETDEPS += $$PWD/../../c++/Lua/lua52.lib
+else:unix|win32-g++: PRE_TARGETDEPS += $$PWD/../../c++/Lua/liblua52.a

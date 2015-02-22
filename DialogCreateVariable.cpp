@@ -12,13 +12,14 @@
 #include <QDebug>
 
 DialogCreateVariable::DialogCreateVariable(LSystem* lSystem, QWidget* parent) :
-	QDialog(parent),
+	QDialog(parent, Qt::CustomizeWindowHint | Qt::WindowTitleHint | Qt::WindowMinMaxButtonsHint),
 	_ui(new Ui::DialogCreateVariable),
 	_lSystem(lSystem),
 	_variable(nullptr),
 	_variableModel(lSystem->getVariableModel()),
 	_itemDelegate(new SpinBoxDelegate(this)),
-	_currentMode(CREATE)
+	_currentMode(CREATE),
+	_currentProductionModel(nullptr)
 {
 	_ui->setupUi(this);
 
@@ -38,6 +39,9 @@ void DialogCreateVariable::setVariable(Variable* variable) {
 	_originalName = variable->getName();
 	_ui->txtVarName->setText(variable->getName());
 	_ui->productionsView->setModel((QAbstractItemModel*)variable->getProductionModel());
+	_currentProductionModel = nullptr;
+	_currentProductionIndex = QModelIndex();
+	_ui->producitionVariableView->setModel(nullptr);
 }
 
 Variable* DialogCreateVariable::getVariable() {
@@ -76,24 +80,22 @@ void DialogCreateVariable::on_btnRemoveProduction_clicked() {
 
 // Add the currently selected variable to the end of the production
 void DialogCreateVariable::on_btnAddToProduction_clicked() {
-	VariableSequenceModel* model = (VariableSequenceModel*)_ui->producitionVariableView->model();
-
-	if(model == nullptr) return;
+	if(!_currentProductionModel) return;
 
 	foreach(QModelIndex index, _ui->variableListView->selectionModel()->selectedIndexes()) {
 		if(!index.isValid()) continue;
-		Variable* var = (Variable*)_ui->variableListView->model()->data(index, Qt::UserRole).value<void*>();
+		Variable* var = (Variable*)_ui->variableListView->model()->data(index, Qt::EditRole).value<void*>();
 
-		int row = model->rowCount(QModelIndex());
-		model->insertRow(row);
-		model->setData(model->index(row, 0), QVariant::fromValue((void*)var), Qt::UserRole);
+		int row = _currentProductionModel->rowCount(QModelIndex());
+		_currentProductionModel->insertRow(row);
+		_currentProductionModel->setData(_currentProductionModel->index(row, 0), QVariant::fromValue((void*)var), Qt::UserRole);
 	}
 }
 
 void DialogCreateVariable::on_btnRemoveFromProduction_clicked() {
-	VariableSequenceModel* model = (VariableSequenceModel*)_ui->producitionVariableView->model();
+	if(!_currentProductionModel) return;
 	foreach(QModelIndex index, _ui->producitionVariableView->selectionModel()->selectedIndexes()) {
-		model->removeRow(index.row());
+		_currentProductionModel->removeRow(index.row());
 	}
 }
 
@@ -102,6 +104,7 @@ void DialogCreateVariable::on_productionsView_clicked(const QModelIndex& index) 
 	_currentProductionIndex = index;
 	Production* production = (Production*)_ui->productionsView->model()->data(index, Qt::UserRole).value<void*>();
 	_ui->producitionVariableView->setModel(production->getVariableSequenceModel());
+	_currentProductionModel = production->getVariableSequenceModel();
 	_ui->txtProductionName->setText(production->getName());
 }
 
