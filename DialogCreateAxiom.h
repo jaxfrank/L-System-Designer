@@ -32,11 +32,12 @@ public:
 private slots:
 	void on_btnAdd_clicked();
 	void on_btnRemove_clicked();
-	void on_btnMoveDown_clicked();
-	void on_btnMoveUp_clicked();
+
 	void on_txtBoxName_textEdited(const QString& name);
 
 	void on_buttonBox_accepted();
+
+	void on_buttonBox_rejected();
 
 private:
 	Ui::DialogCreateAxiom* _ui;

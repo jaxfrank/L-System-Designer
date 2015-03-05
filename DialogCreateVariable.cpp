@@ -11,6 +11,9 @@
 #include <QModelIndex>
 #include <QDebug>
 
+#include <QScriptEngine>
+#include <QScriptSyntaxCheckResult>
+
 DialogCreateVariable::DialogCreateVariable(LSystem* lSystem, QWidget* parent) :
 	QDialog(parent, Qt::CustomizeWindowHint | Qt::WindowTitleHint | Qt::WindowMinMaxButtonsHint),
 	_ui(new Ui::DialogCreateVariable),
@@ -42,6 +45,9 @@ void DialogCreateVariable::setVariable(Variable* variable) {
 	_currentProductionModel = nullptr;
 	_currentProductionIndex = QModelIndex();
 	_ui->producitionVariableView->setModel(nullptr);
+	_ui->txtEditScript->setText(variable->getScript());
+	_ui->lblErorMessage->setText("");
+	_ui->lblSyntaxErrorMsg->setText("");
 }
 
 Variable* DialogCreateVariable::getVariable() {
@@ -111,6 +117,14 @@ void DialogCreateVariable::on_productionsView_clicked(const QModelIndex& index) 
 void DialogCreateVariable::on_btnBoxOkCancel_accepted() {
 	//_ui->lblErorMessage->setText("Accepting!");
 
+	QScriptSyntaxCheckResult result = QScriptEngine::checkSyntax(_ui->txtEditScript->toPlainText());
+	if(result.state() == QScriptSyntaxCheckResult::Error || result.state() == QScriptSyntaxCheckResult::Intermediate) {
+		_ui->lblErorMessage->setText("Must write valid script!");
+		return;
+	} else {
+		_variable->setScript(_ui->txtEditScript->toPlainText());
+	}
+
 	if(_currentMode == CREATE && _lSystem->variableExists(_variable->getName())) {
 		_ui->lblErorMessage->setText("Variable name is not unique.");
 		return;
@@ -135,7 +149,8 @@ void DialogCreateVariable::on_btnBoxOkCancel_accepted() {
 }
 
 void DialogCreateVariable::on_btnBoxOkCancel_rejected() {
-	delete _variable;
+	if(_currentMode == CREATE)
+		delete _variable;
 	emit cancel();
 }
 
@@ -159,4 +174,13 @@ void DialogCreateVariable::on_txtVarName_textEdited(const QString& name) {
 		}
 		break;
 	}
+}
+
+void DialogCreateVariable::on_btnValidate_clicked() {
+	QScriptSyntaxCheckResult result = QScriptEngine::checkSyntax(_ui->txtEditScript->toPlainText());
+
+	if(result.state() == QScriptSyntaxCheckResult::Error || result.state() == QScriptSyntaxCheckResult::Intermediate)
+		_ui->lblSyntaxErrorMsg->setText(result.errorMessage() + QString(" on line ") + QString::number(result.errorLineNumber()));
+	else
+		_ui->lblSyntaxErrorMsg->setText("Valid");
 }

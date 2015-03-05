@@ -4,7 +4,7 @@
 #
 #-------------------------------------------------
 
-QT       += core gui opengl
+QT       += core gui opengl script
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
@@ -24,7 +24,8 @@ SOURCES += main.cpp\
     SpinBoxDelegate.cpp \
     VariableSequenceListModel.cpp \
     DialogCreateAxiom.cpp \
-    Simulator.cpp
+    Simulator.cpp \
+    VariableSequenceRenderer.cpp
 
 HEADERS  += MainWindow.h \
     LSystem.h \
@@ -37,16 +38,9 @@ HEADERS  += MainWindow.h \
     SpinBoxDelegate.h \
     VariableSequenceListModel.h \
     DialogCreateAxiom.h \
-    Simulator.h
+    Simulator.h \
+    VariableSequenceRenderer.h
 
 FORMS    += MainWindow.ui \
     DialogCreateVariable.ui \
     DialogCreateAxiom.ui
-
-unix|win32: LIBS += -L$$PWD/../../c++/Lua/ -llua52
-
-INCLUDEPATH += $$PWD/../../c++/Lua/include
-DEPENDPATH += $$PWD/../../c++/Lua/include
-
-win32:!win32-g++: PRE_TARGETDEPS += $$PWD/../../c++/Lua/lua52.lib
-else:unix|win32-g++: PRE_TARGETDEPS += $$PWD/../../c++/Lua/liblua52.a

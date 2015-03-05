@@ -67,14 +67,6 @@ void DialogCreateAxiom::on_btnRemove_clicked() {
 	}
 }
 
-void DialogCreateAxiom::on_btnMoveDown_clicked() {
-
-}
-
-void DialogCreateAxiom::on_btnMoveUp_clicked() {
-
-}
-
 void DialogCreateAxiom::on_txtBoxName_textEdited(const QString& name) {
 	_axiomVariableSequenceModel->setData(QModelIndex(), name, Qt::DisplayRole);
 }
@@ -113,4 +105,8 @@ void DialogCreateAxiom::on_buttonBox_accepted() {
 		return;
 		break;
 	}
+}
+
+void DialogCreateAxiom::on_buttonBox_rejected() {
+	emit cancel();
 }

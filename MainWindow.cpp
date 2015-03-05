@@ -5,6 +5,7 @@
 #include <QModelIndex>
 
 #include "Simulator.h"
+#include "VariableSequenceRenderer.h"
 
 #include "LSystem.h"
 #include "Variable.h"
@@ -24,19 +25,21 @@ MainWindow::MainWindow(QWidget *parent) :
 	_createVariableDialog(nullptr),
 	_createAxiomDialog(nullptr),
 	_currentSystem(nullptr),
-	_currentSystemModel(nullptr)
+	_currentSystemModel(nullptr),
+	_renderer(new VariableSequenceRenderer())
 {
 	_ui->setupUi(this);
 	_ui->variableListView->setModel(_lSystem->getVariableModel());
 	_ui->axiomListView->setModel(_lSystem->getAxiomModel());
 
-	_ui->actionLSystem_Editor->setChecked(!_ui->lSystemEditor->isHidden());
-
 	_simulator->setLSystem(_lSystem);
+
+	_ui->lSystemGraphicsView->setScene(_renderer->getScene());
 }
 
 MainWindow::~MainWindow() {
 	delete _ui;
+	delete _renderer;
 	if(_currentSystemModel) delete _currentSystemModel;
 	if(_currentSystem) delete _currentSystem;
 }
@@ -124,6 +127,9 @@ void MainWindow::on_btnSimulate_clicked() {
 	_currentSystem = result;
 	_currentSystemModel = _currentSystem->getModel();
 	_ui->simulatedListView->setModel(_currentSystemModel);
+
+	_renderer->setSequence(result);
+	_renderer->evaluateSequence();
 }
 
 void MainWindow::on_sbSeed_valueChanged(int value) {

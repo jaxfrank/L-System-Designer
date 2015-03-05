@@ -88,20 +88,6 @@
         </widget>
        </item>
        <item>
-        <widget class="QPushButton" name="btnMoveUp">
-         <property name="text">
-          <string>Move Up</string>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="QPushButton" name="btnMoveDown">
-         <property name="text">
-          <string>Move Down</string>
-         </property>
-        </widget>
-       </item>
-       <item>
         <spacer name="verticalSpacer_2">
          <property name="orientation">
           <enum>Qt::Vertical</enum>

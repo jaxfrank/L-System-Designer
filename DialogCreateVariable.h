@@ -51,6 +51,8 @@ private slots:
 
 	void on_txtVarName_textEdited(const QString &arg1);
 
+	void on_btnValidate_clicked();
+
 private:
 	Ui::DialogCreateVariable* _ui;
 	LSystem* _lSystem;

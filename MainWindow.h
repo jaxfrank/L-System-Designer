@@ -11,6 +11,7 @@ class VariableSequence;
 class Variable;
 
 class VariableSequenceModel;
+class VariableSequenceRenderer;
 
 class DialogCreateVariable;
 class DialogCreateAxiom;
@@ -33,23 +34,18 @@ private slots:
 	void on_btnRemoveVariable_clicked();
 	void on_btnEditVariable_clicked();
 	void on_variableListView_doubleClicked(const QModelIndex &index);
-
 	void on_btnAddAxiom_clicked();
-
 	void on_btnEditAxiom_clicked();
-
 	void on_btnRemoveAxiom_clicked();
-
 	void on_btnSimulate_clicked();
-
 	void on_sbSeed_valueChanged(int value);
-
 	void on_pushButton_clicked();
 
 private:
 	Ui::MainWindow* _ui;
 
 	Simulator* _simulator;
+	VariableSequenceRenderer* _renderer;
 	LSystem* _lSystem;
 	DialogCreateVariable* _createVariableDialog;
 	DialogCreateAxiom* _createAxiomDialog;

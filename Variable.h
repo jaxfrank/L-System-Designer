@@ -34,8 +34,12 @@ public:
 	void setName(QString name) { this->_name = name; }
 	int getNumProductions() const;
 
+	void setScript(const QString& script);
+	const QString& getScript() const;
+
 private:
 	QString _name;
+	QString _script;
 	QList<Production*>* _productions;
 	int _sumOfProductionWeights;
 	ProductionTableModel* _productionModel;

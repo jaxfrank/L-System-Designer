@@ -13,7 +13,8 @@ Variable::Variable(QString name, QObject* parent):
 	_name(name),
 	_sumOfProductionWeights(0),
 	_productions(new QList<Production*>()),
-	_productionModel(new ProductionTableModel(_productions))
+	_productionModel(new ProductionTableModel(_productions)),
+	_script("")
 {}
 
 Variable::~Variable() {
@@ -45,6 +46,14 @@ ProductionTableModel* Variable::getProductionModel() {
 
 int Variable::getNumProductions() const {
 	return _productions->count();
+}
+
+void Variable::setScript(const QString& script) {
+	_script = script;
+}
+
+const QString& Variable::getScript() const {
+	return _script;
 }
 
 void Variable::recalculateProductionWeights() {
